@@ -35,7 +35,7 @@ class ShapeRenderer: NodeRenderer {
         if shape.fill == nil && shape.stroke == nil {
             return
         }
-
+    
         RenderUtils.setGeometry(shape.form, ctx: context)
 
         var fillRule = FillRule.nonzero
@@ -172,6 +172,11 @@ class ShapeRenderer: NodeRenderer {
             let boundsTranform = BoundsUtils.transformForLocusInRespectiveCoords(respectiveLocus: pattern.bounds, absoluteLocus: shape.form)
             patternBounds = pattern.bounds.applying(boundsTranform)
         }
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+        if patternBounds.x.isNaN { // add by chitaner after v1.3.4, fix bug
+            return
+        }
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
         let tileImage = renderer.renderToImage(bounds: patternBounds, inset: 0)
         ctx?.clip()
         ctx?.draw(tileImage.cgImage!, in: patternBounds.toCG(), byTiling: true)
